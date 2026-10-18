@@ -1,11 +1,36 @@
 #!/bin/bash
 
-contest=$(printf "%03d" "$1")
-last=${2:-g}
+set -e
 
-dir="abc/$contest"
+# 引数
+type=${1,,}       # abc / arc / agc
+number=$2         # コンテスト番号
+last=${3:-g}      # 最終問題（省略時はg）
+
+# 引数チェック
+if [[ ! "$type" =~ ^(abc|arc|agc)$ ]]; then
+    echo "Error: type must be abc, arc, or agc"
+    exit 1
+fi
+
+if [[ ! "$number" =~ ^[0-9]+$ ]]; then
+    echo "Error: invalid contest number"
+    exit 1
+fi
+
+if [[ ! "$last" =~ ^[a-z]$ ]]; then
+    echo "Error: last must be a-z"
+    exit 1
+fi
+
+# コンテスト番号を3桁にする
+contest=$(printf "%03d" "$((10#$number))")
+
+# 出力先
+dir="$type/$contest"
 mkdir -p "$dir"
 
+# A～指定された問題まで生成
 for problem in {a..z}; do
     file="$dir/$problem.cpp"
 
@@ -18,6 +43,8 @@ for problem in {a..z}; do
         } > "$file"
 
         echo "Created: $file"
+    else
+        echo "Skip: $file"
     fi
 
     if [ "$problem" = "$last" ]; then
