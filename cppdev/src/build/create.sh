@@ -3,13 +3,13 @@
 set -e
 
 # 引数
-type=${1,,}       # abc / arc / agc
+type=${1,,}       # abc / arc / agc / awc
 number=$2         # コンテスト番号
 last=${3:-g}      # 最終問題（省略時はg）
 
 # 引数チェック
-if [[ ! "$type" =~ ^(abc|arc|agc)$ ]]; then
-    echo "Error: type must be abc, arc, or agc"
+if [[ ! "$type" =~ ^(abc|arc|agc|awc)$ ]]; then
+    echo "Error: type must be abc, arc, agc, or awc"
     exit 1
 fi
 
