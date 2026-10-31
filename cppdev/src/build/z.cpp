@@ -796,110 +796,8 @@ void do_rle(){
   // debug(r5);
 }
 
-// 有限体F_p上の演算
-// https://qiita.com/drken/items/3b4fdf0a78e7a138cd9a
-template<int MOD> struct Fp {
-  long long val;
-
-  constexpr Fp(long long v = 0) noexcept : val(v % MOD){
-    if(val < 0) val += MOD;
-  }
-
-  constexpr Fp operator - () const noexcept {
-    return val ? MOD - val : 0;
-  }
-
-  constexpr Fp operator + (const Fp &r) const noexcept { return Fp(*this) += r; }
-  constexpr Fp operator - (const Fp &r) const noexcept { return Fp(*this) -= r; }
-  constexpr Fp operator * (const Fp &r) const noexcept { return Fp(*this) *= r; }
-  constexpr Fp operator / (const Fp &r) const noexcept { return Fp(*this) /= r; }
-
-  constexpr Fp& operator += (const Fp& r) noexcept {
-    val += r.val;
-    if(val >= MOD) val -= MOD;
-    return *this;
-  }
-  constexpr Fp& operator -= (const Fp& r) noexcept {
-    val -= r.val;
-    if(val < 0) val += MOD;
-    return *this;
-  }
-  constexpr Fp& operator *= (const Fp& r) noexcept {
-    val = val * r.val % MOD;
-    return *this;
-  }
-  constexpr Fp& operator /= (const Fp& r) noexcept {
-    long long a = r.val;
-    long long b = MOD;
-    long long u = 1, v = 0;
-    while(b){
-      long long t = a / b;
-      a -= t * b; swap(a, b);
-      u -= t * v; swap(u, v);
-    }
-
-    val = val * u % MOD;
-    if(val < 0) val += MOD;
-    return *this;
-  }
-
-  constexpr Fp& operator == (const Fp& r) noexcept {
-    return this->val == r.val;
-  }
-  constexpr Fp& operator != (const Fp& r) noexcept {
-    return this->val != r.val;
-  }
-  friend constexpr ostream& operator << (ostream &os, const Fp<MOD>& x) noexcept {
-    return os << x.val;
-  }
-  friend constexpr Fp<MOD> modpow (const Fp<MOD> &a, long long n) noexcept {
-    if (n == 0) return 1;
-    auto t = modpow(a, n / 2);
-    t = t * t;
-    if (n & 1) t = t * a;
-    return t;
-  }
-};
 
 const int MOD = 998244353;
-
-void do_fp_calc(){
-  vector<Fp<MOD>> v1 = {1, 2, 3 ,4};
-  vector<Fp<MOD>> v2 = {5, 6, 7 ,8};
-
-  rep(i, v1.size()){
-    rep(j, v2.size()){
-      cout << v1.at(i) << " + " << v2.at(j) << " = " << v1.at(i)+v2.at(j) << endl;
-      cout << v1.at(i) << " - " << v2.at(j) << " = " << v1.at(i)-v2.at(j) << endl;
-      cout << v1.at(i) << " * " << v2.at(j) << " = " << v1.at(i)*v2.at(j) << endl;
-      cout << v1.at(i) << " / " << v2.at(j) << " = " << v1.at(i)/v2.at(j) << endl;
-    }
-  }
-
-  cout << endl;
-
-  rep(i, 10){
-    Fp<20> a = i;
-
-    rep(j, 10){
-      cout << i << "^" << j << " = " << modpow(a, j) << endl;
-    }
-  }
-
-
-  rep(i, 10){
-    Fp<MOD> ii = -i;
-    cout << ii << endl;
-  }
-
-  rep(i, v1.size()){
-    for(int j = 1; j < 11; j++){
-      Fp<MOD> base = 10;
-      auto a_i = - v1.at(i) * modpow(base, j);
-      cout << "- "<< v1.at(i) << " * 10 ^" << j << " = " << a_i << endl;
-    }
-  }
-}
 
 
 // Z algorithm
@@ -1472,25 +1370,6 @@ struct PairHash {
   }
 };
 
-vector<Fp<MOD>> fac;
-vector<Fp<MOD>> ifac;
-
-void fact_initialize(int n){
-  fac.resize(n+1);
-  ifac.resize(n+1);
-  fac.at(0) = 1;
-  ifac.at(0) = 1;
-
-  for(int i = 1; i <=n ;i++){
-    fac.at(i) = fac.at(i-1) * i;
-    ifac.at(i) = ifac.at(i-1) / i;
-  }
-}
-
-Fp<MOD> comb(ll n, ll k){
-  if(n < k) return 0;
-  return fac.at(n) * ifac.at(n-k) * ifac.at(k);
-}
 
 // 下記を参考
 // https://drken1215.hatenablog.com/entry/2023/05/06/133900
