@@ -1,5 +1,4 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <vector>
 
 template <typename T>
 struct SegmentTree {
@@ -7,22 +6,22 @@ struct SegmentTree {
   // ただし、外からは0-indexedとみなすことができる
 
   // 演算、単位元
-  function<T(T,T)> op;
+  std::function<T(T,T)> op;
   T e;
 
   // 元のデータサイズ
   int n;
 
   // SegmentTreeで管理するデータ
-  vector<T> x;
+  std::vector<T> x;
 
   // SegmentTreeで確保したデータから実データにアクセスするためのoffset
   int offset;
 
-  SegmentTree(int N, function<T(T,T)> op, T e) : op(op), e(e) {
+  SegmentTree(int N, std::function<T(T,T)> op, T e) : op(op), e(e) {
     initialize(N);
   }
-  SegmentTree(const vector<T> &v, const function<T(T,T)> op, T e) : op(op), e(e) {
+  SegmentTree(const std::vector<T> &v, const std::function<T(T,T)> op, T e) : op(op), e(e) {
     initialize((int)v.size());
     build(v);
   }
@@ -34,7 +33,7 @@ struct SegmentTree {
     x.assign(2*offset, e);
   }
 
-  void build(const vector<T> &v) {
+  void build(const std::vector<T> &v) {
     for(int i = 0; i < (int)v.size(); i++) x.at(i + offset) = v.at(i);
     for(int i = offset-1; i > 0; i--) x.at(i) = op(x.at(i*2), x.at(i*2+1));
   }
@@ -83,7 +82,7 @@ struct SegmentTree {
 
   // SegmentTree上の二分探索
   // [l, r)に対する演算がtrueとなるrを返す
-  int max_right(const function<bool(T)> f, int l = 0) {
+  int max_right(const std::function<bool(T)> f, int l = 0) {
     if(l == n) return n;
     l += offset;
     T res = e;
@@ -107,7 +106,7 @@ struct SegmentTree {
 
   // SegmentTree上の二分探索
   // [l, r)に対する演算がtrueとなるlを返す
-  int min_left(const function<bool(T)> f, int r = -1) {
+  int min_left(const std::function<bool(T)> f, int r = -1) {
     if(r == 0) return 0;
     if(r == -1) r = n;
     r += offset;
@@ -136,49 +135,12 @@ struct SegmentTree {
     int br_num = 1;
     for(int i = 0; i < (int)x.size(); i++) {
       if(i == 0) continue;
-      cout << x.at(i) << " ";
+      std::cout << x.at(i) << " ";
       if(br_num == i){
-        cout << endl;
+        std::cout << std::endl;
         // 2^(n-1) - 1から2^n - 1
         br_num = (br_num+1)*2-1;
       }
     }
   }
 };
-
-
-void do_segment_tree(){
-  auto f = [](int a, int b) -> int {return min(a, b);};
-  int e = INT_MAX/2;
-  SegmentTree<int> seg = SegmentTree<int>(10, f, e);
-
-  vector<int> v = {1, 4, 3, 9, 4, 6, 2, 2, 3};
-
-  //                1
-  //        1               3
-  //    1       2       3       e
-  //  1   3   4   2   3   e   e   e
-  // 1 4 3 9 4 6 2 2 3 e e e e e e e
-
-  for(int i = 0; i < (int)v.size(); i++) {
-    seg.set(i, v.at(i));
-  }
-
-  int mi_1 = seg.prod(1, 3);  
-  int mi_2 = seg.prod(0, 9);
-  int mi_3 = seg.prod(5, 8);
-  int mi_4 = seg.prod(5, 5);
-
-  cout << "min of interval[1, 3) is " << mi_1 << endl;
-  cout << "min of interval[0, 9) is " << mi_2 << endl;
-  cout << "min of interval[5, 8) is " << mi_3 << endl;
-  cout << "min of interval[5, 5) is " << mi_4 << endl;
-
-  cout << "seg out" << endl;
-  seg.out();
-}
-
-int main() {
-  do_segment_tree();
-  return 0;
-}
