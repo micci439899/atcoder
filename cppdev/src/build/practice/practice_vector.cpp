@@ -195,28 +195,23 @@ void practice_vector() {
   std::cout << std::endl;
 
 
+
   // 2d
+  std::vector<std::vector<int>> vv(10, std::vector<int>(10));
+  for(int i = 0; i < 10; i++) {
+    std::iota(vv.at(i).begin(), vv.at(i).end(), i*10);
+  }
 
-  // stoi
-  // stoll
+  for(int i = 0; i < 10; i++){
+    for(int j = 0; j < 10; j++) {
+      if(j) std::cout << " ";
+      std::cout << vv.at(i).at(j);
+    }
+    std::cout << std::endl;
+  }
 
-  // setprecision
-
-
-  // 1<<30 + 1<<30
-  // 1<<30 + (ll)1<<30
-
-  // rbegin
-  // rend
-
-
-  // zip_views
-
-
-  // set
-  // map
-  // string
-  // prime
+  // zip_viewはおいておく...
+  // C++でzipは使わない...
 }
 
 int main() {
