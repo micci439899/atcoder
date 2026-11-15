@@ -79,30 +79,6 @@ ll lcm(ll a, ll b){
   return a*b/gcd(a, b);
 }
 
-// 傾き（slope, gradient）
-pll grad(pll p1, pll p2){
-  ll dx = p1.first - p2.first;
-  ll dy = p1.second - p2.second;
-
-  if(dx == 0){
-    dx = 0;
-    dy = 1;
-  }else if(dy == 0){
-    dx = 1;
-    dy = 0;
-  }else{
-    if(dx < 0){
-      dx *= -1;
-      dy *= -1;
-    }
-    ll g = gcd(abs(dx), abs(dy));
-    dx /= g;
-    dy /= g;
-  }
-  return {dx, dy};
-}
-
-
 // attention
 // n < 10
 ll base_n_to_10(string s, int base){
