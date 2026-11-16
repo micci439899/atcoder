@@ -357,66 +357,6 @@ vector<ll> z_algorithm(string &s){
 }
 
 
-// FenwickTree(Binary Indexed Tree)
-// 下記参考
-// https://qiita.com/DaikiSuyama/items/7295f5160a51684554a7
-// https://algo-logic.info/binary-indexed-tree/
-template<typename T>
-struct FenwickTree {
-  int n;
-  vector<T> bit;
-
-  FenwickTree(int n_) : n(n_+1), bit(n_+1, 0){}
-
-  // 1点更新
-  // 0-indexed
-  void add(int i, T x){
-    // 内部的には1-indexed
-    i++;
-    for(int idx = i; idx < n; idx += (idx & -idx)){
-      bit.at(idx) += x;
-    }
-  }
-
-  // a_0 + ... + a_i
-  // 0-indexed
-  T sum(int i){
-    // 内部的には1-indexed
-    i++;
-    T sm(0);
-    for(int idx = i; idx > 0; idx -= (idx & -idx)){
-      sm += bit.at(idx);
-    }
-    return sm;
-  }
-};
-
-void do_fenwick(){
-  ll n, q; cin >> n >> q;
-
-  vector<ll> a(n);
-  rep(i, n) cin >> a.at(i);
-
-  FenwickTree<ll> tree(n);
-  rep(i, n){
-    tree.add(i, a.at(i));
-  }
-
-  while(q--){
-    int type; cin >> type;
-    if(type == 0){
-      ll p, x; cin >> p >> x;
-      tree.add(p, x);
-    }else{
-      ll l, r; cin >> l >> r;
-      ll sm_l = tree.sum(l-1);
-      ll sm_r = tree.sum(r-1);
-      cout << sm_r - sm_l << endl;
-    }
-  }
-}
-
-
 void do_intervalsets(){
   IntervalSet<int> iSt;
   iSt.add(1, 3);
